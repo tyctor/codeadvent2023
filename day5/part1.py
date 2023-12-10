@@ -45,7 +45,7 @@ def get_mapping(seed, ranges):
     return seed
 
 
-def find_location(idx, seed, ranges):
+def find_location(seed, ranges):
     current = seed
     for section in ranges:
         current = get_mapping(current, section)
@@ -61,17 +61,8 @@ if __name__ == "__main__":
             current_section = SECTIONS[lines.pop(0)]
             parse_map_ranges(current_section, lines)
         locations = {}
-        with concurrent.futures.ProcessPoolExecutor(max_workers=1) as executor:
-            seed_to_location = {
-                executor.submit(find_location, idx, seed, list(SECTIONS.values())): seed for idx, seed in enumerate(SEEDS, start=1)
-            }
-            for future in concurrent.futures.as_completed(seed_to_location):
-                seed = seed_to_location[future]
-                try:
-                    location = future.result()
-                except Exception as exc:
-                    print('%r generated an exception: %s' % (seed, exc))
-                else:
-                    locations[seed] = location
+        for seed in SEEDS:
+            location = find_location(seed, SECTIONS.values())
+            locations[seed] = location
         result = min(locations.values())
         print(f"Lowest location number is {result} in file {filename}")
