@@ -37,29 +37,19 @@ def parse_map_ranges(ranges, section_lines):
     ranges.sort(key=itemgetter(1))
 
 
-def is_mapped(seed, ranges):
-    for _, src, range_len in ranges:
-        if src <= seed < src + range_len:
-            return True
-    return False
-
-
-def generate_mappings(ranges):
+def get_mapping(seed, ranges):
     for dest, src, range_len in ranges:
-        for idx in range(src, src + range_len):
-            yield idx, dest
-            dest += 1
+        if src <= seed < src + range_len:
+            shift = seed - src
+            return dest + shift
+    return seed
 
 
 def find_location(idx, seed, ranges):
     print(f"{idx}. Working on seed {seed}")
     current = seed
     for section in ranges:
-        if is_mapped(current, section):
-            for src, dest in generate_mappings(section):
-                if current == src:
-                    current = dest
-                    break
+        current = get_mapping(current, section)
     return current
 
 
@@ -72,6 +62,8 @@ if __name__ == "__main__":
             current_section = SECTIONS[lines.pop(0)]
             parse_map_ranges(current_section, lines)
         locations = {}
+        print(SEEDS)
+        print(len(SEEDS))
         with concurrent.futures.ProcessPoolExecutor(max_workers=6) as executor:
             # Start the load operations and mark each future with its URL
             seed_to_location = {
