@@ -46,7 +46,6 @@ def get_mapping(seed, ranges):
 
 
 def find_location(idx, seed, ranges):
-    print(f"{idx}. Working on seed {seed}")
     current = seed
     for section in ranges:
         current = get_mapping(current, section)
