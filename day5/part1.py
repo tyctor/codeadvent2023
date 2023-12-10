@@ -62,8 +62,7 @@ if __name__ == "__main__":
             current_section = SECTIONS[lines.pop(0)]
             parse_map_ranges(current_section, lines)
         locations = {}
-        with concurrent.futures.ProcessPoolExecutor(max_workers=6) as executor:
-            # Start the load operations and mark each future with its URL
+        with concurrent.futures.ProcessPoolExecutor(max_workers=1) as executor:
             seed_to_location = {
                 executor.submit(find_location, idx, seed, list(SECTIONS.values())): seed for idx, seed in enumerate(SEEDS, start=1)
             }
