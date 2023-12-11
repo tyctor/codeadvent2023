@@ -13,7 +13,7 @@ def extrapolate_values(values):
     sequences = sequences[::-1]
     new_value = 0
     for idx in range(1, len(sequences)):
-        new_value = sequences[idx][-1] + new_value
+        new_value = sequences[idx][0] - new_value
     return new_value
 
 
