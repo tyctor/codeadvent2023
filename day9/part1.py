@@ -28,7 +28,3 @@ if __name__ == "__main__":
         ]
         result = sum(extrapolated_values)
         print(f"Sum of extrapolated values is {result} in file {filename}")
-
-
-
-
